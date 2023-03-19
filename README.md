@@ -9,7 +9,7 @@
 python3.8、 transformers==4.2.0、pytorch==1.7.1
 
 ## 项目结构
-- config文件夹里面的config放的预训练模型的参数的配置文件
+- config文件夹里面的config放的预训练模型的参数的配置文件（存放GPT2模型的参数的配置文件）
 - data文件夹
     - train.txt:默认的原始训练集文件，存放闲聊语料 
     - train.pkl:对原始训练语料进行tokenize之后的文件,存储一个list对象，list的每条数据表示一个多轮对话，表示一条训练数据
@@ -26,6 +26,9 @@ python3.8、 transformers==4.2.0、pytorch==1.7.1
 - dataset.py:数据读取以及预处理
 - pytorchtools.py: early stoping
 - generate_dialogue_subset.py: 用于生成对话训练子集
+- interact_mmi.py:人机交互代码mmi模型
+- dialogue_model:存放对话生成的模型
+- mmi_model:存放MMI模型(maximum mutual information scoring function)，用于预测P(Source|response)
 
 
 ## 模型简介
@@ -164,6 +167,38 @@ chatbot:没时间啊，忙得很啊
   user :忙着干嘛呢
 chatbot:不知道啊，我周末没有作业，我想睡觉，然后还得找人
 ``` 
+
+
+Dialogue Model
+Dialogue Model是基于GPT2模型的生成模型，对每条训练数据进行"顺序"拼接，然后将其输入到网络中，进行训练(此处的"顺序"是相对于MMI Model的"逆序")
+例如存在如下多轮闲聊训练数据,在训练Dialogue Model时，将上述训练数据进行如下拼接:"[CLS]想看你的美照[SEP]亲我一口就给你看[SEP]我亲两口[SEP]讨厌人家拿小拳拳捶你胸口[SEP]"。然后将上述拼接结果作为Dialogue Model的输入，对模型进行训练
+
+
+MMI Model
+MMI Model的思想基于微软的论文DialoGPT:Large-Scale Generative Pre-training for Conversational Response Generation
+MMI Model也是一个基于GPT2的生成模型，将每条训练数据进行"逆序"拼接,然后输入到网络中。该模型主要用于计算Dialogue Model生成的所有候选response相对于dialogue history的loss。
+训练时，将一条训练语料进行逆序拼接，如 “[CLS]讨厌人家拿小拳拳捶你胸口[SEP]我亲两口[SEP]亲我一口就给你看[SEP]想看你的美照[SEP]”，并作为MMI Model的输入进行训练
+
+
+response生成步骤
+假设当前dialogue history=[“你好”,“你好呀”,“你在干嘛呢”]
+首先使用Dialogue Model根据dialogue history生成n个候选response:[“在看电视”,“我在上课啊”,“人家在想你啊”,“我不知道”]
+使用MMI Model将每个候选response分别与dialogue history进行逆序拼接，如 "[CLS]在看电视[SEP]你在干嘛呢[SEP]你好呀[SEP]你好[SEP]"
+将上述拼接结果作为MMI Model的输入，计算每个response的loss
+选择loss最小的response作为最终的结果进行回复
+
+模型分享
+闲聊语料大小为67M，包含50w个多轮对话。使用该语料训练了两个模型dialogue_model与mmi_model
+
+dialogue_model
+使用闲聊语料训练了40个epoch，最终loss在2.0左右，继续训练的话，loss应该还能继续下降。
+【提取码:osi6】
+https://pan.baidu.com/s/1qDZ24VKLBU9GKARX9Ev65g
+
+mmi_model
+以dialogue_model作为预训练模型，使用上述闲聊语料，训练了40个epoch，最终loss在1.8-2.2之间，继续训练的话，loss也能继续下降。
+【提取码:1j88】
+https://pan.baidu.com/s/1ubXGuEvY8KmwEjIVTJVLww
 
 
 ## Reference

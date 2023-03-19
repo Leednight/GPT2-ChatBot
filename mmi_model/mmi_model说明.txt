@@ -1,0 +1,1 @@
+存放MMI模型(maximum mutual information scoring function)，用于预测P(Source|response)

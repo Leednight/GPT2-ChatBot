@@ -4,7 +4,7 @@ import os
 import argparse
 from datetime import datetime
 import logging
-from transformers import GPT2TokenizerFast, GPT2LMHeadModel, GPT2Config
+from transformers import GPT2LMHeadModel
 from transformers import BertTokenizerFast
 import torch.nn.functional as F
 
