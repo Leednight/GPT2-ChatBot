@@ -1,0 +1,1 @@
+预训练模型GPT2LMHeadModel的模型的参数的配置文件

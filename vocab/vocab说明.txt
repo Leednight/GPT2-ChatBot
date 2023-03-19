@@ -1,0 +1,2 @@
+vocab文件夹说明
+vocab.txt:字典文件。默认的字典大小为13317，若需要使用自定义字典，需要将confog.json文件中的vocab_size字段设为相应的大小。

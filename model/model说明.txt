@@ -1,0 +1,4 @@
+model目录存放对话生成的模型：
+例子：model_epoch40_50w:50w对话数据经过40轮训练之后得到的模型文件夹
+--config.json:模型参数的配置文件
+--pytorch_model.bin:模型文件
