@@ -6,7 +6,7 @@
 - 在生成阶段，使用了Temperature、Top-k Sampling和Nucleus Sampling等，可参考论文[The Curious Case of Neural Text Degeneration](https://arxiv.xilesou.top/pdf/1904.09751.pdf)
 
 ## 运行环境
-python3.7、 transformers==4.2.0、pytorch==1.7.0
+python3.8、 transformers==4.2.0、pytorch==1.7.1
 
 ## 项目结构
 - config文件夹里面的config放的预训练模型的参数的配置文件
@@ -23,6 +23,9 @@ python3.7、 transformers==4.2.0、pytorch==1.7.0
 - preprocess.py:数据预处理代码
 - train.py:训练代码
 - interact.py:人机交互代码
+- dataset.py:数据读取以及预处理
+- pytorchtools.py: early stoping
+- generate_dialogue_subset.py: 用于生成对话训练子集
 
 
 ## 模型简介
