@@ -2,8 +2,8 @@
 
 ## 项目描述
 - 本项目是基于GPT2的中文闲聊机器人，模型实现基于HuggingFace的[transformers](https://github.com/huggingface/transformers)。
-- 本项目受 [GPT2-Chinese](https://github.com/Morizeyao/GPT2-Chinese)启发，精读作者的代码，获益匪浅。
 - 在生成阶段，使用了Temperature、Top-k Sampling和Nucleus Sampling等，可参考论文[The Curious Case of Neural Text Degeneration](https://arxiv.xilesou.top/pdf/1904.09751.pdf)
+- 本项目受 [GPT2-Chinese](https://github.com/Morizeyao/GPT2-Chinese)启发，精读作者的代码，获益匪浅。
 
 ## 运行环境
 python3.8、 transformers==4.2.0、pytorch==1.7.1
@@ -24,6 +24,8 @@ python3.8、 transformers==4.2.0、pytorch==1.7.1
 - train.py:训练代码
 - interact.py:人机交互代码
 - dataset.py:数据读取以及预处理
+- num_workers_dataset文件夹: 存放用來測CPU最佳num_workers的数据
+- choose_best_num_workers.py: 測CPU最佳num_workers的脚本
 - pytorchtools.py: early stoping
 - generate_dialogue_subset.py: 用于生成对话训练子集
 - interact_mmi.py:人机交互代码mmi模型
@@ -166,36 +168,29 @@ chatbot:不怕
 chatbot:没时间啊，忙得很啊
   user :忙着干嘛呢
 chatbot:不知道啊，我周末没有作业，我想睡觉，然后还得找人
-``` 
+```
 
-
-Dialogue Model
+#### Dialogue Model
 Dialogue Model是基于GPT2模型的生成模型，对每条训练数据进行"顺序"拼接，然后将其输入到网络中，进行训练(此处的"顺序"是相对于MMI Model的"逆序")
 例如存在如下多轮闲聊训练数据,在训练Dialogue Model时，将上述训练数据进行如下拼接:"[CLS]想看你的美照[SEP]亲我一口就给你看[SEP]我亲两口[SEP]讨厌人家拿小拳拳捶你胸口[SEP]"。然后将上述拼接结果作为Dialogue Model的输入，对模型进行训练
 
-
-MMI Model
+#### MMI Model
 MMI Model的思想基于微软的论文DialoGPT:Large-Scale Generative Pre-training for Conversational Response Generation
 MMI Model也是一个基于GPT2的生成模型，将每条训练数据进行"逆序"拼接,然后输入到网络中。该模型主要用于计算Dialogue Model生成的所有候选response相对于dialogue history的loss。
 训练时，将一条训练语料进行逆序拼接，如 “[CLS]讨厌人家拿小拳拳捶你胸口[SEP]我亲两口[SEP]亲我一口就给你看[SEP]想看你的美照[SEP]”，并作为MMI Model的输入进行训练
-
-
-response生成步骤
+#### response生成步骤
 假设当前dialogue history=[“你好”,“你好呀”,“你在干嘛呢”]
 首先使用Dialogue Model根据dialogue history生成n个候选response:[“在看电视”,“我在上课啊”,“人家在想你啊”,“我不知道”]
 使用MMI Model将每个候选response分别与dialogue history进行逆序拼接，如 "[CLS]在看电视[SEP]你在干嘛呢[SEP]你好呀[SEP]你好[SEP]"
 将上述拼接结果作为MMI Model的输入，计算每个response的loss
 选择loss最小的response作为最终的结果进行回复
-
-模型分享
+#### 模型分享
 闲聊语料大小为67M，包含50w个多轮对话。使用该语料训练了两个模型dialogue_model与mmi_model
-
-dialogue_model
+#### dialogue_model
 使用闲聊语料训练了40个epoch，最终loss在2.0左右，继续训练的话，loss应该还能继续下降。
 【提取码:osi6】
 https://pan.baidu.com/s/1qDZ24VKLBU9GKARX9Ev65g
-
-mmi_model
+#### mmi_model
 以dialogue_model作为预训练模型，使用上述闲聊语料，训练了40个epoch，最终loss在1.8-2.2之间，继续训练的话，loss也能继续下降。
 【提取码:1j88】
 https://pan.baidu.com/s/1ubXGuEvY8KmwEjIVTJVLww
@@ -205,6 +200,7 @@ https://pan.baidu.com/s/1ubXGuEvY8KmwEjIVTJVLww
 - [The Curious Case of Neural Text Degeneration](https://arxiv.xilesou.top/pdf/1904.09751.pdf)
 - [transformers](https://github.com/huggingface/transformers)
 - [GPT2-Chinese](https://github.com/Morizeyao/GPT2-Chinese)
+- [GPT2-chitchat](https://github.com/yangjianxin1/GPT2-chitchat)
 
 
 
