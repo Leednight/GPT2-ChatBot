@@ -3,7 +3,8 @@
 ## 项目描述
 - 本项目是基于GPT2的中文闲聊机器人，模型实现基于HuggingFace的[transformers](https://github.com/huggingface/transformers)。
 - 在生成阶段，使用了Temperature、Top-k Sampling和Nucleus Sampling等，可参考论文[The Curious Case of Neural Text Degeneration](https://arxiv.xilesou.top/pdf/1904.09751.pdf)
-- 本项目受 [GPT2-Chinese](https://github.com/Morizeyao/GPT2-Chinese)启发，精读作者的代码，获益匪浅。
+- 本项目受 [GPT2-Chinese](https://github.com/Morizeyao/GPT2-Chinese)启发
+- 本项目受 [GPT2-chitchat](https://github.com/yangjianxin1/GPT2-chitchat)启发
 
 ## 运行环境
 python3.8、 transformers==4.2.0、pytorch==1.7.1
